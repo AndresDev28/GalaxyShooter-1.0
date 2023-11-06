@@ -17,8 +17,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _explosionPrefab;
     [SerializeField]
-    private GameObject _shieldGameobjetc;   
+    private GameObject _shieldGameobjetc;
+    [SerializeField]
+    private GameObject _thrustersGameobject;
+    [SerializeField]
+    private GameObject[] _engines;
 
+    private int _hitCount = 0;
     private UI_Manager _uimanager;
     private GameManager _gameManager;
     private SpawnManager _spawnManager;
@@ -51,6 +56,8 @@ public class Player : MonoBehaviour
         }
 
         _audioSource = GetComponent<AudioSource>();
+
+        _hitCount = 0;
     }
 
     // Update is called once per frame
@@ -145,6 +152,7 @@ public class Player : MonoBehaviour
     public void SpeedBoostPowerOn()
     {
         speedBoost = true;
+        _thrustersGameobject.SetActive(true);
 
         StartCoroutine(SpeedBoostDownRutine());
     }
@@ -154,6 +162,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
 
         speedBoost = false;
+        _thrustersGameobject.SetActive(false);
     }
 
     public void EnableShield()
@@ -164,17 +173,28 @@ public class Player : MonoBehaviour
 
     public void LivesControl()
     {
+        
         if (shieldActivate == true)
         {
             shieldActivate = false;
             _shieldGameobjetc.SetActive(false);
             return;
         }
-        else
+
+        _hitCount++;
+
+        if (_hitCount == 1)
         {
-            lives -= 1;
-            _uimanager.UpdateLives(lives);
+            _engines[0].SetActive(true);
         }
+        else if (_hitCount == 2)
+        {
+            _engines[1].SetActive(true);
+        }
+
+        lives -= 1;
+        _uimanager.UpdateLives(lives);
+        
 
         if (lives < 1)
         {
