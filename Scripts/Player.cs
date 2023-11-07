@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _thrustersGameobject;
     [SerializeField]
+    private GameObject _boostThrustersGameobject;
+    [SerializeField]
     private GameObject[] _engines;
 
     private int _hitCount = 0;
@@ -152,7 +154,8 @@ public class Player : MonoBehaviour
     public void SpeedBoostPowerOn()
     {
         speedBoost = true;
-        _thrustersGameobject.SetActive(true);
+        _thrustersGameobject.SetActive(false);
+        _boostThrustersGameobject.SetActive(true);
 
         StartCoroutine(SpeedBoostDownRutine());
     }
@@ -162,7 +165,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
 
         speedBoost = false;
-        _thrustersGameobject.SetActive(false);
+        _thrustersGameobject.SetActive(true);
+        _boostThrustersGameobject.SetActive(false);
     }
 
     public void EnableShield()
